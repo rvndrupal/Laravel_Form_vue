@@ -2,14 +2,14 @@
             <main class="main">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-
+                <h1>Tabla Datos</h1>
             </ol>
             <div class="container-fluid">
                 <!-- Ejemplo de tabla Listado -->
                 <div class="card">
                     <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Categorías
-                        <button type="button" @click="abrirModal('categoria','registrar')" class="btn btn-secondary">
+                        <i class="fa fa-align-justify"></i> Datos
+                        <button type="button" @click="abrirModal('datos','registrar')" class="btn btn-secondary">
                             <i class="icon-plus"></i>&nbsp;Nuevo
                         </button>
                         <button type="button" @click="cargarPdf()" class="btn btn-info">
@@ -21,11 +21,12 @@
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <select class="form-control col-md-3" v-model="criterio">
-                                      <option value="nombre">Nombre</option>
-                                      <option value="descripcion">Descripción</option>
+                                      <option value="nom">Nombre</option>
+                                      <option value="ap">Apellido paterno</option>
+                                      <option value="am">Apellido materno</option>
                                     </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarCategoria(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarCategoria(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    <input type="text" v-model="buscar" @keyup.enter="listarDatos(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" @click="listarDatos(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -34,31 +35,33 @@
                                 <tr>
                                     <th>Opciones</th>
                                     <th>Nombre</th>
-                                    <th>Descripción</th>
+                                    <th>Apellido paterno</th>
+                                    <th>Apellido materno</th>
                                     <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="categoria in arrayCategoria" :key="categoria.id">
+                                <tr v-for="datos in arrayDatos" :key="datos.id">
                                     <td>
-                                        <button type="button" @click="abrirModal('categoria','actualizar',categoria)" class="btn btn-warning btn-sm">
+                                        <button type="button" @click="abrirModal('datos','actualizar',datos)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
-                                        <template v-if="categoria.condicion">
-                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarCategoria(categoria.id)">
+                                        <template v-if="datos.condicion">
+                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarDatos(datos.id)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
                                         <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm" @click="activarCategoria(categoria.id)">
+                                            <button type="button" class="btn btn-info btn-sm" @click="activarDatos(datos.id)">
                                                 <i class="icon-check"></i>
                                             </button>
                                         </template>
                                     </td>
-                                    <td v-text="categoria.nombre"></td>
-                                    <td v-text="categoria.descripcion"></td>
+                                    <td v-text="datos.nom"></td>
+                                    <td v-text="datos.ap"></td>
+                                    <td v-text="datos.am"></td>
                                     <td>
-                                        <div v-if="categoria.condicion">
+                                        <div v-if="datos.condicion">
                                             <span class="badge badge-success">Activo</span>
                                         </div>
                                         <div v-else>
@@ -101,18 +104,30 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre(*)</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de categoría">
+                                        <input type="text" v-model="nom" class="form-control" placeholder="Nombre de categoría">
+                                        <span v-if="errorSer.nom" class="text-error">{{ errorSer.nom[0] }}</span>
                                     </div>
+
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-md-3 form-control-label" for="email-input">Descripción</label>
+                                    <label class="col-md-3 form-control-label" for="email-input">Apellido Paterno</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="descripcion" class="form-control" placeholder="Ingrese descripción">
+                                        <input type="text" v-model="ap" class="form-control" placeholder="Ingrese descripción">
+                                        <span v-if="errorSer.ap" class="text-error">{{ errorSer.ap[0] }}</span>
                                     </div>
+
                                 </div>
-                                <div v-show="errorCategoria" class="form-group row div-error">
+                                 <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="email-input">Apellido Materno</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="am" class="form-control" placeholder="Ingrese descripción">
+                                         <span v-if="errorSer.am" class="text-error">{{ errorSer.am[0] }}</span>
+                                    </div>
+
+                                </div>
+                                <div v-show="errorDatos" class="form-group row div-error">
                                     <div class="text-center text-error">
-                                        <div v-for="error in errorMostrarMsjCategoria" :key="error" v-text="error">
+                                        <div v-for="error in errorMostrarMsjDatos" :key="error" v-text="error">
 
                                         </div>
                                     </div>
@@ -122,8 +137,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarCategoria()">Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarCategoria()">Actualizar</button>
+                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarDatos()">Guardar</button>
+                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarDatos()">Actualizar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -139,15 +154,17 @@
         props : ['ruta'],
         data (){
             return {
-                categoria_id: 0,
-                nombre : '',
-                descripcion : '',
-                arrayCategoria : [],
+                datos_id: 0,
+                nom : '',
+                ap : '',
+                am : '',
+                arrayDatos : [],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
-                errorCategoria : 0,
-                errorMostrarMsjCategoria : [],
+                errorDatos : 0,
+                errorMostrarMsjDatos : [],
+                errorSer: [],
                 pagination : {
                     'total' : 0,
                     'current_page' : 0,
@@ -157,7 +174,7 @@
                     'to' : 0,
                 },
                 offset : 3,
-                criterio : 'nombre',
+                criterio : 'nom',
                 buscar : ''
             }
         },
@@ -191,14 +208,12 @@
             }
         },
         methods : {
-            listarCategoria (page,buscar,criterio){
+            listarDatos (page,buscar,criterio){
                 let me=this;
-                var url='categoria?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
-                console.log(url);
+                var url='datos?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
                 axios.get(url).then(function (response) {
-                    console.log(response);
                     var respuesta= response.data;
-                    me.arrayCategoria = respuesta.categorias.data;
+                    me.arrayDatos = respuesta.datos.data;
                     me.pagination= respuesta.pagination;
                 })
                 .catch(function (error) {
@@ -215,42 +230,57 @@
                 //Envia la petición para visualizar la data de esa página
                 me.listarCategoria(page,buscar,criterio);
             },
-            registrarCategoria(){
-                if (this.validarCategoria()){
+            registrarDatos(){
+                this.errorSer=[]
+                if (this.validarDatos()){
                     return;
                 }
 
                 let me = this;
 
-                axios.post('categoria/registrar',{
-                    'nombre': this.nombre,
-                    'descripcion': this.descripcion
+                axios.post('datos/registrar',{
+                    'nom': this.nom,
+                    'ap': this.ap,
+                    'am': this.am
                 }).then(function (response) {
+                    console.log(response);
                     me.cerrarModal();
-                    me.listarCategoria(1,'','nombre');
-                }).catch(function (error) {
-                    console.log(error);
+                    me.listarDatos(1,'','nom');
+                }).catch(error => {
+                    if(error.response.status == 422)
+                    {
+                        this.errorSer=error.response.data.errors
+                        alert(errorSer);
+
+                    }
                 });
             },
-            actualizarCategoria(){
-               if (this.validarCategoria()){
+            actualizarDatos(){
+                 this.errorSer=[]
+               if (this.validarDatos()){
                     return;
                 }
 
                 let me = this;
 
-                axios.put('categoria/actualizar',{
-                    'nombre': this.nombre,
-                    'descripcion': this.descripcion,
-                    'id': this.categoria_id
+                axios.put('datos/actualizar',{
+                    'nom': this.nom,
+                    'ap': this.ap,
+                    'am': this.am,
+                    'id': this.datos_id
                 }).then(function (response) {
                     me.cerrarModal();
-                    me.listarCategoria(1,'','nombre');
-                }).catch(function (error) {
-                    console.log(error);
+                    me.listarDatos(1,'','nom');
+                }).catch(error => {
+                    if(error.response.status == 422)
+                    {
+                        this.errorSer=error.response.data.errors
+                        alert(errorSer);
+
+                    }
                 });
             },
-            desactivarCategoria(id){
+            desactivarDatos(id){
                swal({
                 title: 'Esta seguro de desactivar esta categoría?',
                 type: 'warning',
@@ -267,10 +297,10 @@
                 if (result.value) {
                     let me = this;
 
-                    axios.put('categoria/desactivar',{
+                    axios.put('datos/desactivar',{
                         'id': id
                     }).then(function (response) {
-                        me.listarCategoria(1,'','nombre');
+                        me.listarDatos(1,'','nom');
                         swal(
                         'Desactivado!',
                         'El registro ha sido desactivado con éxito.',
@@ -289,7 +319,7 @@
                 }
                 })
             },
-            activarCategoria(id){
+            activarDatos(id){
                swal({
                 title: 'Esta seguro de activar esta categoría?',
                 type: 'warning',
@@ -306,10 +336,10 @@
                 if (result.value) {
                     let me = this;
 
-                    axios.put('categoria/activar',{
+                    axios.put('datos/activar',{
                         'id': id
                     }).then(function (response) {
-                        me.listarCategoria(1,'','nombre');
+                        me.listarDatos(1,'','nom');
                         swal(
                         'Activado!',
                         'El registro ha sido activado con éxito.',
@@ -328,34 +358,36 @@
                 }
                 })
             },
-            validarCategoria(){
-                this.errorCategoria=0;
-                this.errorMostrarMsjCategoria =[];
+            validarDatos(){
+                this.errorDatos=0;
+                this.errorMostrarMsjDatos =[];
 
-                // if (!this.nombre) this.errorMostrarMsjCategoria.push("El nombre de la categoría no puede estar vacío.");
-                // if (!this.descripcion) this.errorMostrarMsjCategoria.push("La descripción de la categoría no puede estar vacío.");
+                // if (!this.nom) this.errorMostrarMsjDatos.push("El nombre  no puede estar vacío.");
+                // if (!this.descripcion) this.errorMostrarMsjDatos.push("La descripción de la categoría no puede estar vacío.");
 
-                if (this.errorMostrarMsjCategoria.length) this.errorCategoria = 1;
+                if (this.errorMostrarMsjDatos.length) this.errorDatos = 1;
 
-                return this.errorCategoria;
+                return this.errorDatos;
             },
             cerrarModal(){
                 this.modal=0;
                 this.tituloModal='';
-                this.nombre='';
-                this.descripcion='';
+                this.nom='';
+                this.ap='';
+                this.am='';
             },
             abrirModal(modelo, accion, data = []){
                 switch(modelo){
-                    case "categoria":
+                    case "datos":
                     {
                         switch(accion){
                             case 'registrar':
                             {
                                 this.modal = 1;
-                                this.tituloModal = 'Registrar Categoría';
-                                this.nombre= '';
-                                this.descripcion = '';
+                                this.tituloModal = 'Registrar Datosss';
+                                this.nom= '';
+                                this.ap = '';
+                                this.am = '';
                                 this.tipoAccion = 1;
                                 break;
                             }
@@ -363,11 +395,12 @@
                             {
                                 //console.log(data);
                                 this.modal=1;
-                                this.tituloModal='Actualizar categoría';
+                                this.tituloModal='Actualizar Datos';
                                 this.tipoAccion=2;
-                                this.categoria_id=data['id'];
-                                this.nombre = data['nombre'];
-                                this.descripcion= data['descripcion'];
+                                this.datos_id=data['id'];
+                                this.nom = data['nom'];
+                                this.ap = data['ap'];
+                                this.am = data['am'];
                                 break;
                             }
                         }
@@ -376,7 +409,7 @@
             }
         },
         mounted() {
-            this.listarCategoria(1,this.buscar,this.criterio);
+            this.listarDatos(1,this.buscar,this.criterio);
         }
     }
 </script>

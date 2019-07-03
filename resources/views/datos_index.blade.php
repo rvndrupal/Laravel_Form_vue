@@ -14,10 +14,7 @@
 
     <div id="app">
             <template v-if="menu==2">
-           {{--  <categoria></categoria>  --}}
-
-           <datos></datos>
-           <datos-index></datos-index>
+                <datos-index></datos-index>
             </template>
 
     </div>

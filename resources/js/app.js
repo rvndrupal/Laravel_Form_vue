@@ -23,6 +23,7 @@ window.Vue = require('vue');
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('categoria', require('./components/Categorias.vue').default);
 Vue.component('datos', require('./components/Datos.vue').default);
+Vue.component('datos-index', require('./components/Datos_index.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -34,6 +35,6 @@ const app = new Vue({
     el: '#app',
 
     data:{
-        menu: 1,
+        menu: 2,
     }
 });

@@ -18,6 +18,7 @@ class CreateDatosTable extends Migration
             $table->string('nom');
             $table->string('ap');
             $table->string('am');
+            $table->boolean('condicion')->default(1);
             $table->timestamps();
         });
     }

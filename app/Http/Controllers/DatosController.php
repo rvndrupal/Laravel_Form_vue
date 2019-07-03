@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Datos;
 use Illuminate\Http\Request;
+use App\Http\Requests\DatosStoreRequest;
 
 class DatosController extends Controller
 {
@@ -12,9 +13,31 @@ class DatosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if (!$request->ajax()) return redirect('/');
+
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+
+        if ($buscar==''){
+            $datos = Datos::orderBy('id', 'desc')->paginate(10);
+        }
+        else{
+            $datos = Datos::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(10);
+        }
+        return [
+            'pagination' => [
+                'total'        => $datos->total(),
+                'current_page' => $datos->currentPage(),
+                'per_page'     => $datos->perPage(),
+                'last_page'    => $datos->lastPage(),
+                'from'         => $datos->firstItem(),
+                'to'           => $datos->lastItem(),
+            ],
+            'datos' => $datos
+        ];
+        //dd($datos);
     }
 
     /**
@@ -33,9 +56,15 @@ class DatosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DatosStoreRequest $request)
     {
-        //
+        if (!$request->ajax()) return redirect('/');
+        $datos = new Datos();
+        $datos->nom = $request->nom;
+        $datos->ap = $request->ap;
+        $datos->am = $request->am;
+        $datos->condicion = '1';
+        $datos->save();
     }
 
     /**
@@ -67,9 +96,15 @@ class DatosController extends Controller
      * @param  \App\Datos  $datos
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Datos $datos)
+    public function update(DatosStoreRequest $request, Datos $datos)
     {
-        //
+        if (!$request->ajax()) return redirect('/');
+        $datos = Datos::findOrFail($request->id);
+        $datos->nom = $request->nom;
+        $datos->ap = $request->ap;
+        $datos->am = $request->am;
+        $datos->condicion = '1';
+        $datos->save();
     }
 
     /**
@@ -82,4 +117,21 @@ class DatosController extends Controller
     {
         //
     }
+
+    public function desactivar(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        $datos = Datos::findOrFail($request->id);
+        $datos->condicion = '0';
+        $datos->save();
+    }
+
+    public function activar(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        $datos = Datos::findOrFail($request->id);
+        $datos->condicion = '1';
+        $datos->save();
+    }
+
 }
