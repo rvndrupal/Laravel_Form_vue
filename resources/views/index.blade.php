@@ -11,10 +11,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
-    <h1>Categorias</h1><br>
+
     <div id="app">
             <template v-if="menu==1">
-                <categoria></categoria>
+           <datos></datos>
             </template>
 
     </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Categorias;
 use Illuminate\Http\Request;
+use App\Http\Requests\ClientesStoreRequest;
 
 class CategoriasController extends Controller
 {
@@ -55,8 +56,9 @@ class CategoriasController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ClientesStoreRequest $request)
     {
+
         if (!$request->ajax()) return redirect('/');
         $categoria = new Categorias();
         $categoria->nombre = $request->nombre;
@@ -94,7 +96,7 @@ class CategoriasController extends Controller
      * @param  \App\Categorias  $categorias
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Categorias $categorias)
+    public function update(ClientesStoreRequest $request, Categorias $categorias)
     {
         if (!$request->ajax()) return redirect('/');
         $categoria = Categorias::findOrFail($request->id);

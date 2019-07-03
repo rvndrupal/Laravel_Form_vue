@@ -102,13 +102,12 @@
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre(*)</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de categoría">
-
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="email-input">Descripción</label>
                                     <div class="col-md-9">
-                                        <input type="email" v-model="descripcion" class="form-control" placeholder="Ingrese descripción">
+                                        <input type="text" v-model="descripcion" class="form-control" placeholder="Ingrese descripción">
                                     </div>
                                 </div>
                                 <div v-show="errorCategoria" class="form-group row div-error">
@@ -331,7 +330,8 @@
                 this.errorCategoria=0;
                 this.errorMostrarMsjCategoria =[];
 
-                if (!this.nombre) this.errorMostrarMsjCategoria.push("El nombre de la categoría no puede estar vacío.");
+                // if (!this.nombre) this.errorMostrarMsjCategoria.push("El nombre de la categoría no puede estar vacío.");
+                // if (!this.descripcion) this.errorMostrarMsjCategoria.push("La descripción de la categoría no puede estar vacío.");
 
                 if (this.errorMostrarMsjCategoria.length) this.errorCategoria = 1;
 
