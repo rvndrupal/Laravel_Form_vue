@@ -31,7 +31,7 @@ Route::get('/index/datos', function () {
     return view('datos_index');
 });
 
-Route::get('/datos', 'DatosController@index');
+Route::get('/datos', 'DatosController@index')->name('index');
 Route::post('/datos/registrar', 'DatosController@store');
 Route::put('/datos/actualizar', 'DatosController@update');
 Route::put('/datos/desactivar', 'DatosController@desactivar');

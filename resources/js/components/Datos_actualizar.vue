@@ -2,7 +2,7 @@
             <main class="main">
             <!-- Breadcrumb -->
             <ol class="breadcrumb">
-                <h1>Formulario de datos</h1>
+                <h1>Actualizar datos</h1>
             </ol>
             <div class="container-fluid espacio"  v-if="insertar == 1">
 

@@ -46,6 +46,18 @@
                                         <button type="button" @click="abrirModal('datos','actualizar',datos)" class="btn btn-warning btn-sm">
                                           <i class="icon-pencil"></i>
                                         </button> &nbsp;
+
+
+
+                                        <!-- Nuevo modal ############3-->
+
+                                         <button type="button" @click="abrirModal2('datosdos','actualizardos',datos)" class="btn btn-warning btn-sm">
+                                          <i class="icon-home"></i>
+                                        </button> &nbsp;
+
+                                        <!-- Nuevo modal #############3-->
+
+
                                         <template v-if="datos.condicion">
                                             <button type="button" class="btn btn-danger btn-sm" @click="desactivarDatos(datos.id)">
                                                 <i class="icon-trash"></i>
@@ -139,6 +151,8 @@
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
                             <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarDatos()">Guardar</button>
                             <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarDatos()">Actualizar</button>
+                            <button type="button" v-if="tipoAccion==3" class="btn btn-primary" @click="actualizarDatos()">Actualizar step</button>
+
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -146,6 +160,137 @@
                 <!-- /.modal-dialog -->
             </div>
             <!--Fin del modal-->
+
+             <!--Modal steps-->
+            <div class="modal fade" tabindex="-1" :class="{'mostrar' : modaldos}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-primary modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" v-text="tituloModal"></h4>
+                            <button type="button" class="close" @click="cerrarModaldos()" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="text-input">Nombre(*)</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="nom" class="form-control" placeholder="Nombre de categoría">
+                                        <span v-if="errorSer.nom" class="text-error">{{ errorSer.nom[0] }}</span>
+                                    </div>
+
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="email-input">Apellido Paterno</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="ap" class="form-control" placeholder="Ingrese descripción">
+                                        <span v-if="errorSer.ap" class="text-error">{{ errorSer.ap[0] }}</span>
+                                    </div>
+
+                                </div>
+                                 <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="email-input">Apellido Materno</label>
+                                    <div class="col-md-9">
+                                        <input type="text" v-model="am" class="form-control" placeholder="Ingrese descripción">
+                                         <span v-if="errorSer.am" class="text-error">{{ errorSer.am[0] }}</span>
+                                    </div>
+
+                                </div>
+                                <div v-show="errorDatos" class="form-group row div-error">
+                                    <div class="text-center text-error">
+                                        <div v-for="error in errorMostrarMsjDatos" :key="error" v-text="error">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form> -->
+                             <form action="" >
+
+                    <section v-if="paso == 1">
+                        <h3>Paso uno</h3>
+
+                        <div class="form-group">
+                            <label class="">Nombre(*)</label>
+                            <div class="col-md-3">
+                                <input type="text" v-model="nom"   class="form-control" placeholder="Nombre">
+                                <span v-for="e in errores" class="errores">{{ e }}</span>
+                                 <span v-if="errorSer.nom" class="text-error">{{ errorSer.nom[0] }}</span>
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                    <section v-if="paso == 2">
+                        <h3>Paso dos</h3>
+
+                        <div class="form-group">
+                            <label class="">Apellido Paterno(*)</label><br>
+                            <div class="col-md-3">
+                                <input type="text" v-model="ap"  class="form-control" placeholder="Apellido paterno">
+                                 <span v-for="e in errores" class="errores">{{ e }}</span>
+                                  <span v-if="errorSer.ap" class="text-error">{{ errorSer.ap[0] }}</span>
+                            </div>
+                        </div>
+
+                    </section>
+
+                    <section v-if="paso == 3">
+                        <h3>Paso tres</h3>
+
+                         <div class="form-group">
+                            <label class="" >Apellido Materno(*)</label>
+                            <div class="col-md-3">
+                                <input type="text"  v-model="am"  class="form-control" placeholder="Apellido materno">
+                                 <span v-for="e in errores" class="errores">{{ e }}</span>
+                                  <span v-if="errorSer.am" class="text-error">{{ errorSer.am[0] }}</span>
+                            </div>
+                        </div>
+
+                    </section>
+
+                     <button class="btn btn-primary"
+                     v-if="paso != 1"
+                     @click.prevent="anteriorPaso">Atras</button>
+
+
+                    <!-- <button class="btn btn-primary"
+                     v-if="paso != totalPasos"
+                     @click.prevent="nextPaso">Siguiente</button> -->
+
+                    <button class="btn btn-primary"
+                     v-if="paso != totalPasos"
+                     @click.prevent="nextPaso">Siguiente</button>
+
+
+
+                     <button class="btn btn-primary"
+                     v-if="paso == totalPasos"
+                     @click="actualizarDatos">Guardar</button>
+
+
+                </form >
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @click="cerrarModaldos()">Cerrar</button>
+                            <!-- <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarDatos()">Guardar</button> -->
+                            <!-- <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarDatos()">Actualizar</button> -->
+                             <!-- <button type="button"  v-if="paso == totalPasos" class="btn btn-primary" @click="actualizarDatos()">Actualizar step</button> -->
+
+
+
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!--Modal steps-->
+
+
+
         </main>
 </template>
 
@@ -160,6 +305,7 @@
                 am : '',
                 arrayDatos : [],
                 modal : 0,
+                modaldos: 0,
                 tituloModal : '',
                 tipoAccion : 0,
                 errorDatos : 0,
@@ -175,8 +321,14 @@
                 },
                 offset : 3,
                 criterio : 'nom',
-                buscar : ''
-            }
+                buscar : '',
+
+                 totalPasos: 3,
+                paso: 1,
+                errores:[],
+                insertar: 1,
+                errorSer: [],
+                }
         },
         computed:{
             isActived: function(){
@@ -376,6 +528,13 @@
                 this.ap='';
                 this.am='';
             },
+            cerrarModaldos(){
+                this.modaldos=0;
+                this.tituloModal='';
+                this.nom='';
+                this.ap='';
+                this.am='';
+            },
             abrirModal(modelo, accion, data = []){
                 switch(modelo){
                     case "datos":
@@ -403,10 +562,75 @@
                                 this.am = data['am'];
                                 break;
                             }
+
+                            case 'actualizardos':
+                            {
+                                //console.log(data);
+                                this.modal=1;
+                                this.tituloModal='Actualizar Datos step';
+                                this.tipoAccion=3;
+                                this.datos_id=data['id'];
+                                this.nom = data['nom'];
+                                this.ap = data['ap'];
+                                this.am = data['am'];
+                                break;
+                            }
                         }
                     }
                 }
-            }
+            },
+
+             abrirModal2(modelo, accion, data = []){
+                switch(modelo){
+                    case "datosdos":
+                    {
+                        switch(accion){
+
+                            case 'actualizardos':
+                            {
+                                //console.log(data);
+                                this.modaldos=1;
+                                this.tituloModal='Actualizar Datos step';
+                                this.tipoAccion=3;
+                                this.datos_id=data['id'];
+                                this.nom = data['nom'];
+                                this.ap = data['ap'];
+                                this.am = data['am'];
+                                break;
+                            }
+                        }
+                    }
+                }
+            },
+
+             nextPaso:function(){
+
+              if(this.paso == 1){
+                  if(!this.nom){
+                      this.errores="El campo nombre es obligatorio";
+                      return false;
+                  }
+                  this.errores="";
+              }
+
+               if(this.paso == 2){
+                  if(!this.ap){
+                      this.errores="El campo Apellido paterno es obligatorio";
+                      return false;
+                  }
+                   this.errores="";
+              }
+
+
+
+              this.paso++;
+          },
+
+          anteriorPaso:function(){
+              this.paso--;
+          },
+
+
         },
         mounted() {
             this.listarDatos(1,this.buscar,this.criterio);
@@ -419,12 +643,14 @@
         width: 100% !important;
         position: absolute !important;
     }
+
     .mostrar{
         display: list-item !important;
         opacity: 1 !important;
         position: absolute !important;
         background-color: #3c29297a !important;
     }
+
     .div-error{
         display: flex;
         justify-content: center;

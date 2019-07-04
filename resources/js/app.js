@@ -25,6 +25,7 @@ Vue.component('categoria', require('./components/Categorias.vue').default);
 Vue.component('datos', require('./components/Datos.vue').default);
 Vue.component('datos-index', require('./components/Datos_index.vue').default);
 
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

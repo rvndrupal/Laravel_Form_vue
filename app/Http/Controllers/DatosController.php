@@ -40,6 +40,22 @@ class DatosController extends Controller
         //dd($datos);
     }
 
+    public function general(Request $request)
+    {
+        $datos=Datos::orderBy('id','DESC')->paginate(5);
+        // dd($datos);
+        return view('datos_table',compact('datos'));
+    }
+
+    public function edit($id)
+    {
+        $dato = Datos::find($id);
+
+        //dd($dato);
+
+        return view('form_actualizar', compact('dato'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -84,10 +100,7 @@ class DatosController extends Controller
      * @param  \App\Datos  $datos
      * @return \Illuminate\Http\Response
      */
-    public function edit(Datos $datos)
-    {
-        //
-    }
+
 
     /**
      * Update the specified resource in storage.
